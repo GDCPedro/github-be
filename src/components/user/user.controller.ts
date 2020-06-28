@@ -11,4 +11,10 @@ export class UserController {
     console.log(await this.userService.findOne(params.id));
     return await this.userService.findOne(params.id);
   }
+
+  @Get("all")
+  async getAll(): Promise<User[]> {
+    console.log("1");
+    return await this.userService.findAll();
+  }
 }

@@ -3,6 +3,11 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 
 /**
+ * 登录模块
+ */
+import { LoginModule } from "../components/login/login.module";
+
+/**
  * 将TypeOrmModule导入AppModule
  * forRoot() 方法支持所有TypeORM包中createConnection()函数暴露出的配置属性。
  * 另外，我们可以创建 ormconfig.json ，而不是将配置对象传递给 forRoot()。
@@ -32,7 +37,8 @@ import { UserModule } from "../components/user/user.module";
       retryAttempts: 2,
       autoLoadEntities: true
     }),
-    UserModule
+    UserModule,
+    LoginModule
   ],
   controllers: [AppController],
   providers: [AppService]

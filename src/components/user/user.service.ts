@@ -12,6 +12,7 @@ export class UserService {
   ) {}
 
   findAll(): Promise<User[]> {
+    console.log(999);
     return this.usersRepository.find();
   }
 
@@ -21,7 +22,7 @@ export class UserService {
    */
   findOne(id: string): Promise<User> {
     // return this.usersRepository.findOne(id);
-    return this.usersRepository.findOne({ firstName: "郭" });
+    return this.usersRepository.findOne(id);
   }
 
   async remove(id: string): Promise<void> {
