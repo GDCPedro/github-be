@@ -1,3 +1,27 @@
 GET http://localhost:8888
 ###
-GET http://localhost:8888/user/all
+GET http://localhost:8888/user
+
+###
+GET http://localhost:8888/user/000001
+
+### 新建几个用户
+POST http://localhost:8888/user/add
+Content-Type: application/json
+
+{
+  "username": "李如萍",
+  "password": "199408",
+  "isActive": false
+}
+
+###
+POST http://localhost:8888/user/updateOne
+Content-Type: application/json
+
+{
+  "id": "000666",
+  "firstName": "熊XXXX",
+  "lastName": "获",
+  "isActive": false
+}
