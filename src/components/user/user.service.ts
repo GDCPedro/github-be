@@ -27,11 +27,21 @@ export class UserService {
 
   /**
    * 查找单个元素
-   * @param id 查找的ID
+   * @param params
    */
-  findOne(id: string): Promise<User> {
+  findOne(params: { username: string; password: string }): Promise<User> {
     // return this.usersRepository.findOne(id);
-    return this.usersRepository.findOne(id);
+    return this.usersRepository.findOne(params);
+  }
+
+  /**
+   *
+   * @param id
+   */
+  findById(id: string | number): Promise<User[]> {
+    return this.usersRepository.find({
+      where: { id }
+    });
   }
 
   /**

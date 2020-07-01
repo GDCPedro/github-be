@@ -5,3 +5,13 @@ Content-Type: application/json
   "username": "李如萍",
   "password": "199408"
 }
+
+### 查看权限
+POST http://localhost:8888/profile
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IuadjuWmguiQjSIsImlkIjoiMDAwODkyIiwiaWF0IjoxNTkzNTY4MDc1LCJleHAiOjE1OTM3NDA4NzV9.aWQGQ-KS1TqY3byhiAOnWGza10oRLprjiHZCDEdrEHg
+
+{
+  "username": "李如萍",
+  "password": "199408"
+}

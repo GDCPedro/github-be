@@ -20,6 +20,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 // import { User } from "../entities/user.entity";
 import { UserModule } from "../components/user/user.module";
 
+import { AuthModule } from "src/components/auth/auth.module";
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -34,7 +36,8 @@ import { UserModule } from "../components/user/user.module";
       retryAttempts: 2,
       autoLoadEntities: true
     }),
-    UserModule
+    UserModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService]
