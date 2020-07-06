@@ -1,8 +1,14 @@
+import { IBaseResponse } from "./types.d";
 import { UserService } from "./../user/user.service";
 import { Injectable } from "@nestjs/common";
 import { User } from "src/entities/user.entity";
 import { JwtService } from "@nestjs/jwt";
 import { IUserBaseInfo } from "./types";
+
+interface ITokenResponse extends IBaseResponse {
+  access_token: string;
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -13,6 +19,7 @@ export class AuthService {
   /**
    * 验证登录用户名和密码
    * @param params { username, password }
+   * @returns user | false 如果验证通过，就返回用户信息；否则返回false
    */
   async validateUser(params: IUserBaseInfo): Promise<User | false> {
     console.log("2--authService--validateUser");
@@ -27,14 +34,13 @@ export class AuthService {
    * 要查询数据库获取id
    * @param params
    */
-  async login(params: IUserBaseInfo): Promise<{ access_token: string } | void> {
-    const user: User | false = await this.validateUser(params);
-    if (user) {
-      const payload = { username: user.username, id: user.id };
-
-      return {
-        access_token: this.jwtService.sign(payload)
-      };
-    }
+  login(params: IUserBaseInfo): ITokenResponse {
+    // 这个地方又验证了一步user，但是有必要吗？
+    // const user: User | false = await this.validateUser(params);
+    return {
+      errorcode: "000000",
+      message: "登录成功！",
+      access_token: this.jwtService.sign(params)
+    };
   }
 }

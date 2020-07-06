@@ -1,11 +1,10 @@
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { jwtConstants } from "./constants";
 import { UserService } from "src/components/user/user.service";
-import { IJwtInfo } from "./types";
 import { User } from "src/entities/user.entity";
-
+import { IUserBaseInfo } from "src/components/auth/types";
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly userService: UserService) {
@@ -23,8 +22,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * 然后调用我们的 validate() 方法，该方法将解码后的 JSON 作为其单个参数传递。
    * 此时项目的payload是包含username和sub
    */
-  async validate(payload: IJwtInfo): Promise<User[]> {
+  async validate(payload: IUserBaseInfo): Promise<IUserBaseInfo> {
     console.log("JwtStrategy--payload: " + JSON.stringify(payload));
-    return await this.userService.findById(payload.id);
+    return payload;
+    /**
+     * 实际上JWT并不会走这一步
+     */
+    // if (!user) {
+    //   throw new UnauthorizedException({
+    //     message: "登录信息已过期，请重新登录",
+    //     errorcode: "0000002"
+    //   });
+    // }
+
+    // return user;
   }
 }

@@ -1,13 +1,17 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, getConnection } from "typeorm";
 
-import { User } from "../../entities/user.entity";
+import { User } from "src/entities/user.entity";
+
+import Crypto from "src/utils";
+const crypto = new Crypto();
 
 /**
  * DTO 数据传输对象
  */
-import CreateUserDto from "../../dto/create-user.dto";
+import CreateUserDto from "src/dto/create-user.dto";
+import { PostException } from "src/exception";
 
 @Injectable()
 export class UserService {
@@ -27,10 +31,12 @@ export class UserService {
 
   /**
    * 查找单个元素
-   * @param params
+   * @param params.password 加密后的密码
+   * @param params.username 用户名
    */
   findOne(params: { username: string; password: string }): Promise<User> {
     // return this.usersRepository.findOne(id);
+    params.password = crypto.decryptoStr(params.password);
     return this.usersRepository.findOne(params);
   }
 
@@ -38,10 +44,17 @@ export class UserService {
    *
    * @param id
    */
-  findById(id: string | number): Promise<User[]> {
-    return this.usersRepository.find({
-      where: { id }
-    });
+  async findById(id: string | number): Promise<User> {
+    const user = await this.usersRepository.findOne(id);
+
+    if (user) {
+      throw new NotFoundException({
+        errorcode: "000003",
+        message: "没有找到该用户"
+      });
+    }
+
+    return user;
   }
 
   /**
@@ -56,7 +69,7 @@ export class UserService {
     if (currentUser) {
       await this.usersRepository.save(currentUser);
     } else {
-      throw new Error("没有该用户");
+      throw new NotFoundException();
     }
   }
 
@@ -64,8 +77,29 @@ export class UserService {
     await this.usersRepository.delete(id);
   }
 
-  async save(createUserDto: CreateUserDto): Promise<void> {
-    console.log(createUserDto);
-    console.log(await this.usersRepository.save(createUserDto));
+  /**
+   * 注册保存用户
+   * @param createUserDto
+   */
+  async save(
+    createUserDto: CreateUserDto
+  ): Promise<{
+    errorcode: string;
+    message: string;
+  }> {
+    const user = await this.findOne(createUserDto);
+
+    if (!!user) {
+      throw new PostException({
+        errorcode: "000005",
+        message: "该用户名已被注册"
+      });
+    }
+
+    await this.usersRepository.save(createUserDto);
+    return {
+      errorcode: "000000",
+      message: "注册成功"
+    };
   }
 }
